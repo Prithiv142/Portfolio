@@ -5,7 +5,7 @@ A single-page, animated frontend portfolio: plain HTML, CSS and JavaScript. No f
 ```
 portfolio/
 ├── index.html                  the whole site (content, styles, script)
-├── Prithiv_Raj_Resume.pdf      linked from the "Download resume" button
+├── PrithivRaj Gopi.pdf      linked from the "Download resume" button
 └── README.md
 ```
 
