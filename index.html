@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="indigo">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prithiv Raj G | Frontend developer, SharePoint Framework and React</title>
+<meta name="description" content="Prithiv Raj G is a frontend developer building enterprise SharePoint Framework apps with React, TypeScript, Fluent UI and Microsoft Graph.">
+<meta property="og:title" content="Prithiv Raj G | Frontend developer">
+<meta property="og:description" content="React, TypeScript and SPFx. 4.5+ years on a compliance platform used by global enterprises.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0A0E1C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%230A0E1C'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Arial' font-weight='700' text-anchor='middle' fill='%238B9BFF'%3EPR%3C/text%3E%3C/svg%3E">
+
+<!-- Applies the saved (or system) theme before first paint so there is no flash. -->
+<script>
+  (function () {
+    var d = document.documentElement, t, a;
+    d.classList.add('js');
+    try { t = localStorage.getItem('pr-theme'); a = localStorage.getItem('pr-accent'); } catch (e) {}
+    if (!t) t = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    d.setAttribute('data-theme', t);
+    d.setAttribute('data-accent', a || 'indigo');
+  })();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400&display=swap" rel="stylesheet">
+
+<style>
+  /* =====================================================================
+     TOKENS  (edit colours, fonts and spacing here)
+     ===================================================================== */
+  :root {
+    --bg: #0A0E1C;
+    --bg2: #0F1529;
+    --card: #131A33;
+    --ink: #EDF0FF;
+    --muted: #9BA6C9;
+    --line: rgba(255,255,255,.11);
+    --dot: rgba(255,255,255,.17);
+    --accent: #8B9BFF;
+    --accent2: #FFB08A;
+    --on-accent: #0A0E1C;
+    --danger: #FF8A7A;
+    --ok: #6FE3BC;
+    color-scheme: dark;
+
+    --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --body: "Newsreader", Georgia, "Times New Roman", serif;
+    --ease: cubic-bezier(.2,.8,.2,1);
+    --pad: clamp(20px, 5vw, 72px);
+    --max: 1180px;
+  }
+  :root[data-accent="coral"] { --accent: #FF8A7A; --accent2: #9DB4FF; }
+  :root[data-accent="mint"]  { --accent: #6FE3BC; --accent2: #B79CFF; }
+
+  :root[data-theme="light"] {
+    --bg: #F5F6FF;
+    --bg2: #ECEEFF;
+    --card: #FFFFFF;
+    --ink: #12163A;
+    --muted: #4F5780;
+    --line: rgba(18,22,58,.13);
+    --dot: rgba(18,22,58,.16);
+    --accent: #4452E8;
+    --accent2: #D9622B;
+    --on-accent: #FFFFFF;
+    --danger: #C23A27;
+    --ok: #0B7F5E;
+    color-scheme: light;
+  }
+  :root[data-theme="light"][data-accent="coral"] { --accent: #D63F2C; --accent2: #3E55D9; }
+  :root[data-theme="light"][data-accent="mint"]  { --accent: #0B7F5E; --accent2: #6B46D8; }
+
+  /* =====================================================================
+     BASE
+     ===================================================================== */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--body); font-size: 1.19rem; line-height: 1.65;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  body.theme-anim, body.theme-anim * { transition: background-color .35s, color .35s, border-color .35s !important; }
+  a { color: inherit; }
+  p { margin: 0 0 1em; }
+  h1, h2, h3 { margin: 0; font-family: var(--display); }
+  button { font: inherit; color: inherit; }
+  code { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .82em; background: color-mix(in srgb, var(--accent) 14%, transparent); padding: .1em .4em; border-radius: 5px; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+  section { padding: clamp(72px, 11vw, 150px) 0; position: relative; }
+  .alt { background: var(--bg2); border-block: 1px solid var(--line); }
+  .skip { position: fixed; left: 12px; top: -60px; z-index: 100; background: var(--accent); color: var(--on-accent); padding: 8px 14px; border-radius: 8px; font-family: var(--display); font-weight: 600; }
+  .skip:focus { top: 12px; }
+
+  .title {
+    font-weight: 800; font-size: clamp(2.3rem, 5.6vw, 4.4rem); letter-spacing: -.035em; line-height: 1.02;
+    margin-bottom: clamp(32px, 5vw, 56px); overflow: hidden; padding-bottom: .12em;
+  }
+  .title > span { display: block; }
+  .js .title > span { transform: translateY(110%); transition: transform .9s var(--ease); }
+  .js .title.in > span { transform: none; }
+
+  /* Scroll reveal */
+  .js [data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease) calc(var(--d, 0) * 80ms), transform .8s var(--ease) calc(var(--d, 0) * 80ms); }
+  .js [data-reveal].in { opacity: 1; transform: none; }
+
+  /* Progress bar */
+  .progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 60; }
+  .progress i { display: block; height: 100%; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+  /* =====================================================================
+     NAV + CONTROLS
+     ===================================================================== */
+  .nav {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 50;
+    display: flex; gap: 2px; padding: 5px; border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border: 1px solid var(--line);
+    max-width: calc(100vw - 330px); overflow-x: auto; scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    position: relative; z-index: 1; padding: 7px 14px; border-radius: 999px; text-decoration: none; white-space: nowrap;
+    font-family: var(--display); font-weight: 600; font-size: .92rem; color: var(--muted); transition: color .25s;
+  }
+  .nav a:hover, .nav a[aria-current="true"] { color: var(--on-accent); }
+  .nav-ind {
+    position: absolute; z-index: 0; top: 5px; left: 0; height: calc(100% - 10px); width: var(--w, 0); border-radius: 999px;
+    transform: translateX(var(--x, 0)); background: var(--accent); opacity: var(--o, 0);
+    transition: transform .45s var(--ease), width .45s var(--ease), opacity .3s;
+  }
+
+  .controls {
+    position: fixed; top: 16px; right: var(--pad); z-index: 50; display: flex; align-items: center; gap: 10px;
+    padding: 5px 6px 5px 12px; border-radius: 999px; border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+  .swatches { display: flex; gap: 8px; }
+  .sw { width: 18px; height: 18px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; background: var(--c); transition: transform .25s var(--ease); }
+  .sw:hover { transform: scale(1.2); }
+  .sw[aria-checked="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--bg); }
+  .theme-btn { width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; transition: transform .4s var(--ease); }
+  .theme-btn:hover { transform: rotate(25deg); }
+  .theme-btn svg { width: 18px; height: 18px; }
+  .theme-btn .moon { display: none; }
+  :root[data-theme="light"] .theme-btn .sun { display: none; }
+  :root[data-theme="light"] .theme-btn .moon { display: block; }
+
+  /* =====================================================================
+     HERO
+     ===================================================================== */
+  .hero { min-height: 100vh; min-height: 100svh; display: flex; align-items: flex-end; padding: 120px 0 clamp(40px, 7vw, 80px); overflow: hidden; position: relative; }
+  #dots { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero .wrap { position: relative; width: 100%; }
+  .name {
+    font-size: clamp(4.1rem, 16.5vw, 15rem); line-height: .86; letter-spacing: -.03em; font-weight: 300;
+    margin: 0 0 clamp(28px, 4vw, 48px); user-select: none;
+  }
+  .name .line { display: block; white-space: nowrap; }
+  .name .ch { display: inline-block; text-align: center; font-variation-settings: "wght" 300; }
+  .name .gap { display: inline-block; width: .22em; }
+  .name .accent { color: var(--accent); }
+  .js .name .ch { opacity: 0; transform: translateY(.55em) rotate(4deg); }
+  .js.ready .name .ch { opacity: 1; transform: none; transition: opacity .8s var(--ease) calc(var(--i) * 55ms), transform 1s var(--ease) calc(var(--i) * 55ms); }
+  .hero-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 28px 40px; }
+  .tagline { font-family: var(--display); font-weight: 600; font-size: clamp(1.25rem, 2.6vw, 2rem); letter-spacing: -.015em; line-height: 1.25; margin: 0; max-width: 20em; }
+  .rotator { display: inline-grid; vertical-align: top; overflow: hidden; color: var(--accent); }
+  .rotator > span { grid-area: 1 / 1; transform: translateY(110%); opacity: 0; transition: transform .6s var(--ease), opacity .4s; }
+  .rotator > span.on { transform: none; opacity: 1; }
+  .rotator > span.off { transform: translateY(-110%); opacity: 0; }
+  .js .hero-row { opacity: 0; transform: translateY(20px); }
+  .js.ready .hero-row { opacity: 1; transform: none; transition: opacity 1s var(--ease) .9s, transform 1s var(--ease) .9s; }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 999px; text-decoration: none; cursor: pointer;
+    font-family: var(--display); font-weight: 600; font-size: 1rem; border: 1px solid var(--line);
+    background: transparent; color: var(--ink); transition: transform .3s var(--ease), background-color .25s, color .25s, border-color .25s;
+  }
+  .btn:hover { border-color: var(--ink); }
+  .btn.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  .btn.primary:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .btn svg { width: 18px; height: 18px; }
+
+  /* =====================================================================
+     MARQUEE
+     ===================================================================== */
+  .marquee { padding: 26px 0; border-block: 1px solid var(--line); background: var(--bg2); overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .track { display: flex; width: max-content; animation: slide 38s linear infinite; }
+  .marquee:hover .track { animation-play-state: paused; }
+  .track ul { display: flex; margin: 0; padding: 0; list-style: none; }
+  .track li { font-family: var(--display); font-weight: 700; font-size: clamp(1.6rem, 3.4vw, 2.6rem); letter-spacing: -.02em; padding: 0 28px; display: flex; align-items: center; gap: 56px; white-space: nowrap; }
+  .track li::after { content: ""; width: 12px; height: 12px; background: var(--accent); transform: rotate(45deg); border-radius: 2px; }
+  .track li:nth-child(even)::after { background: var(--accent2); }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* =====================================================================
+     ABOUT
+     ===================================================================== */
+  .statement { font-family: var(--display); font-weight: 600; font-size: clamp(1.7rem, 4.2vw, 3.4rem); letter-spacing: -.025em; line-height: 1.15; max-width: 22em; margin-bottom: clamp(40px, 6vw, 72px); }
+  .js .statement .w { opacity: .2; transition: opacity .35s; }
+  .js .statement .w.lit { opacity: 1; }
+  .about-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+  .about-grid p { max-width: 36em; color: var(--muted); }
+  .about-grid p:first-child { color: var(--ink); }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px 22px 20px; display: flex; flex-direction: column; }
+  .stat dt { font-family: var(--display); font-weight: 800; font-size: clamp(2.4rem, 4.6vw, 3.6rem); letter-spacing: -.04em; line-height: 1; color: var(--accent); }
+  .stat dd { margin: 8px 0 0; color: var(--muted); font-size: 1rem; line-height: 1.35; }
+
+  /* =====================================================================
+     EXPERIENCE (tabs)
+     ===================================================================== */
+  .role-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 24px; margin-bottom: 36px; }
+  .role-head h3 { font-weight: 700; font-size: clamp(1.4rem, 2.6vw, 2rem); letter-spacing: -.02em; }
+  .role-head p { margin: 0; color: var(--muted); }
+  .xp { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: start; }
+  .tabs { position: relative; display: flex; flex-direction: column; gap: 4px; }
+  .tab-ind { position: absolute; left: 0; top: 0; z-index: 0; width: var(--w, 0); height: var(--h, 0); transform: translate(var(--x, 0), var(--y, 0)); background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; transition: transform .45s var(--ease), width .45s var(--ease), height .45s var(--ease); }
+  .tab { position: relative; z-index: 1; text-align: left; background: none; border: 0; cursor: pointer; padding: 15px 20px; border-radius: 12px; font-family: var(--display); font-weight: 600; font-size: 1.05rem; color: var(--muted); transition: color .25s; }
+  .tab:hover, .tab[aria-selected="true"] { color: var(--ink); }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: clamp(22px, 3.4vw, 40px); min-height: 330px; }
+  .panel[hidden] { display: none; }
+  .panel.show { animation: panelIn .55s var(--ease); }
+  .panel h4 { margin: 0 0 18px; font-family: var(--display); font-weight: 700; font-size: 1.5rem; letter-spacing: -.02em; }
+  .panel ul { margin: 0; padding-left: 1.15em; }
+  .panel li { margin-bottom: .75em; max-width: 40em; }
+  .panel li::marker { color: var(--accent); }
+  @keyframes panelIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  /* =====================================================================
+     SELECTED WORK (tilt cards)
+     ===================================================================== */
+  .work { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .tilt-wrap { perspective: 1000px; }
+  .tilt {
+    position: relative; height: 100%; display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 26px; overflow: hidden;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .3s var(--ease), border-color .3s;
+  }
+  .tilt::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .3s; pointer-events: none; background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--accent) 22%, transparent), transparent 62%); }
+  .tilt:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
+  .tilt:hover::before { opacity: 1; }
+  .tilt > * { position: relative; }
+  .tilt h3 { font-weight: 700; font-size: 1.5rem; letter-spacing: -.02em; margin-bottom: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .badge { font-family: var(--display); font-weight: 600; font-size: .78rem; letter-spacing: 0; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--accent2) 22%, transparent); color: var(--accent2); }
+  .tilt p { color: var(--muted); font-size: 1.06rem; line-height: 1.55; }
+  .viz { margin-top: auto; padding-top: 18px; }
+  .viz small { display: block; margin-top: 10px; color: var(--muted); font-size: .88rem; line-height: 1.35; }
+
+  .bar { height: 12px; border-radius: 999px; background: var(--bg2); overflow: hidden; border: 1px solid var(--line); }
+  .bar i { display: block; height: 100%; width: 0; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .bulk-count { font-family: var(--display); font-weight: 700; margin-top: 10px; font-size: 1.05rem; }
+
+  .people { display: flex; flex-wrap: wrap; gap: 10px; }
+  .p { width: 34px; height: 34px; border-radius: 50%; background: var(--bg2); border: 2px solid var(--line); position: relative; }
+  .p::before { content: ""; position: absolute; left: 50%; top: 6px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: var(--muted); opacity: .7; }
+  .p::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 18px; height: 9px; margin-left: -9px; border-radius: 9px 9px 2px 2px; background: var(--muted); opacity: .7; }
+  .p.key { border-color: var(--accent2); }
+  .p .x2 { position: absolute; right: -8px; top: -8px; z-index: 2; width: 20px; height: 20px; border-radius: 50%; background: var(--danger); color: var(--bg); font-style: normal; font-family: var(--display); font-weight: 800; font-size: .62rem; display: grid; place-items: center; transform: scale(0); transition: transform .45s cubic-bezier(.3,1.7,.5,1); }
+  .lic.defect .p .x2 { transform: scale(1); }
+  .lic-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .lic-count { font-family: var(--display); font-weight: 700; }
+  .lic-count b { font-size: 1.7rem; color: var(--accent); display: inline-block; min-width: 1.1em; }
+  .lic.defect .lic-count b { color: var(--danger); }
+
+  .switch { display: inline-flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; cursor: pointer; font-family: var(--display); font-weight: 600; font-size: .95rem; }
+  .switch .knob { position: relative; width: 46px; height: 26px; border-radius: 999px; background: var(--bg2); border: 1px solid var(--line); transition: background-color .3s, border-color .3s; flex: none; }
+  .switch .knob::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--muted); transition: transform .35s var(--ease), background-color .3s; }
+  .switch[aria-checked="true"] .knob { background: color-mix(in srgb, var(--accent) 30%, var(--bg2)); border-color: var(--accent); }
+  .switch[aria-checked="true"] .knob::after { transform: translateX(20px); background: var(--accent); }
+
+  .flow svg { width: 100%; height: auto; display: block; color: var(--muted); }
+  .flow .node { fill: var(--bg2); stroke: var(--line); }
+  .flow .hub { fill: color-mix(in srgb, var(--accent) 18%, var(--bg2)); stroke: var(--accent); }
+  .flow text { fill: currentColor; font-family: var(--display); font-weight: 600; font-size: 9px; }
+  .flow .hub-text { fill: var(--ink); }
+  .flow path { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 6; animation: dash 1.2s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -20; } }
+
+  /* =====================================================================
+     DEMO (controlled vs uncontrolled)
+     ===================================================================== */
+  .lab-intro { max-width: 40em; color: var(--muted); margin-bottom: 40px; }
+  .lab-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+  .lab-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+  .lab-card h3 { font-weight: 700; font-size: 1.3rem; letter-spacing: -.02em; }
+  .code { display: block; max-width: 100%; margin: 0; padding: 12px 14px; border-radius: 10px; background: var(--bg2); border: 1px solid var(--line); font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .85rem; line-height: 1.5; overflow-x: auto; white-space: pre; color: var(--muted); }
+  .sync { display: inline-flex; align-items: center; gap: 8px; font-family: var(--display); font-weight: 600; font-size: .95rem; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); transition: background-color .3s, color .3s, border-color .3s; }
+  .sync::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; flex: none; }
+  .sync.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 50%, transparent); background: color-mix(in srgb, var(--ok) 12%, transparent); }
+  .sync.bad { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 55%, transparent); background: color-mix(in srgb, var(--danger) 12%, transparent); animation: shake .45s; }
+  @keyframes shake { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  .lab-bar { margin-top: 26px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+  .state-out { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .95rem; color: var(--muted); }
+  .state-out b { color: var(--ink); }
+
+  /* =====================================================================
+     PROBLEMS (flip cards)
+     ===================================================================== */
+  .cases { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+  .flip { display: grid; width: 100%; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; perspective: 1400px; border-radius: 22px; }
+  .flip-in { display: grid; transform-style: preserve-3d; transition: transform .8s var(--ease); }
+  .flip[aria-pressed="true"] .flip-in { transform: rotateY(180deg); }
+  .face { grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 28px; min-height: 290px; }
+  .face.back { transform: rotateY(180deg); background: color-mix(in srgb, var(--accent) 12%, var(--card)); border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+  .face h3 { font-weight: 700; font-size: 1.45rem; letter-spacing: -.02em; display: block; }
+  .face .lbl { font-family: var(--display); font-weight: 700; font-size: .95rem; color: var(--accent); display: block; margin-bottom: 2px; }
+  .face .txt { display: block; line-height: 1.5; }
+  .face .hint { margin-top: auto; font-family: var(--display); font-weight: 600; font-size: .92rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+  .face .hint svg { width: 16px; height: 16px; transition: transform .5s var(--ease); }
+  .flip:hover .hint svg { transform: rotate(180deg); }
+
+  /* =====================================================================
+     SKILLS
+     ===================================================================== */
+  .skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .group { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 26px; }
+  .group h3 { font-weight: 700; font-size: 1.2rem; letter-spacing: -.01em; margin-bottom: 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .chips li { font-family: var(--display); font-weight: 500; font-size: .92rem; padding: 6px 12px; border-radius: 9px; background: var(--bg2); border: 1px solid var(--line); transition: transform .3s var(--ease), background-color .25s, color .25s, border-color .25s; cursor: default; }
+  .chips li:hover { transform: translateY(-4px) rotate(-2deg); background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  .edu { margin: 36px 0 0; color: var(--muted); }
+  .edu strong { color: var(--ink); font-family: var(--display); }
+
+  /* =====================================================================
+     CONTACT
+     ===================================================================== */
+  .contact { padding-bottom: 120px; }
+  .mail { display: inline-block; font-family: var(--display); font-weight: 800; font-size: clamp(1.35rem, 5.6vw, 5rem); letter-spacing: -.035em; line-height: 1.1; text-decoration: none; margin: 8px 0 40px; }
+  .roll { display: block; overflow: hidden; height: 1.15em; }
+  .roll > span { display: block; line-height: 1.15; transition: transform .6s var(--ease); }
+  .roll > span:last-child { color: var(--accent); }
+  .mail:hover .roll > span, .mail:focus-visible .roll > span { transform: translateY(-100%); }
+  .contact p.lead { max-width: 32em; color: var(--muted); }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 calc(26px + env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: .98rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+  footer p { margin: 0; }
+  .toast { position: fixed; left: 50%; bottom: 28px; z-index: 80; transform: translate(-50%, 30px); opacity: 0; pointer-events: none; background: var(--ink); color: var(--bg); padding: 12px 20px; border-radius: 999px; font-family: var(--display); font-weight: 600; transition: transform .45s var(--ease), opacity .3s; }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; }
+
+  /* =====================================================================
+     RESPONSIVE
+     ===================================================================== */
+  @media (max-width: 1100px) { .nav a { padding: 7px 10px; font-size: .86rem; } .nav { max-width: calc(100vw - 300px); } }
+  @media (max-width: 980px) {
+    .work, .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .about-grid, .lab-grid { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 860px) {
+    .nav { top: auto; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); max-width: calc(100vw - 24px); }
+    .nav a { padding: 8px 14px; font-size: .92rem; }
+    .controls { top: 12px; padding-left: 10px; }
+    .xp { grid-template-columns: minmax(0, 1fr); }
+    .tabs { flex-direction: row; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { white-space: nowrap; padding: 12px 16px; }
+    .tab-ind { border-left-width: 1px; border-bottom: 3px solid var(--accent); }
+    footer { padding-bottom: 90px; }
+    .toast { bottom: 90px; }
+  }
+  @media (max-width: 640px) {
+    .work, .skills, .cases { grid-template-columns: minmax(0, 1fr); }
+    .hero-row { align-items: flex-start; }
+    .name { font-size: 21vw; }
+    .hero { padding-bottom: 110px; }
+  }
+  @media (hover: none) { .tilt { transform: none !important; } .tilt::before { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .js [data-reveal], .js .title > span, .js .name .ch, .js .hero-row { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .js .statement .w { opacity: 1; }
+    .track, .flow path, .panel.show, .sync.bad { animation: none; }
+    .tilt, .flip-in, .nav-ind, .tab-ind, .rotator > span { transition: none; }
+  }
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"><i id="progress"></i></div>
+
+<!-- ===== Navigation and controls ===== -->
+<nav class="nav" id="nav" aria-label="Sections">
+  <span class="nav-ind" aria-hidden="true"></span>
+  <a href="#top">Home</a>
+  <a href="#about">About</a>
+  <a href="#experience">Experience</a>
+  <a href="#work">Work</a>
+  <a href="#lab">Demo</a>
+  <a href="#problems">Problems</a>
+  <a href="#skills">Skills</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<div class="controls">
+  <div class="swatches" role="radiogroup" aria-label="Accent colour">
+    <button class="sw" role="radio" aria-checked="true"  aria-label="Indigo" data-accent="indigo" style="--c:#7C8CFF"></button>
+    <button class="sw" role="radio" aria-checked="false" aria-label="Coral"  data-accent="coral"  style="--c:#FF8A7A"></button>
+    <button class="sw" role="radio" aria-checked="false" aria-label="Mint"   data-accent="mint"   style="--c:#34C99B"></button>
+  </div>
+  <button class="theme-btn" id="themeBtn" aria-label="Switch to light theme">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+</div>
+
+<main id="main">
+
+  <!-- ===== Hero ===== -->
+  <header class="hero" id="top">
+    <canvas id="dots" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <h1 class="name" id="name" aria-label="Prithiv Raj G">
+        <span class="line" data-line>Prithiv</span>
+        <span class="line" data-line>Raj <span class="accent">G</span></span>
+      </h1>
+      <div class="hero-row">
+        <p class="tagline">Frontend developer building
+          <span class="rotator" id="rotator">
+            <span class="on">component libraries</span>
+            <span>SharePoint apps</span>
+            <span>secure uploads</span>
+            <span>fast builds</span>
+          </span>
+        </p>
+        <div class="actions">
+          <a class="btn primary magnetic" href="#work">See my work
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </a>
+          <a class="btn magnetic" href="Prithiv_Raj_Resume.pdf" download>Download resume</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Tech marquee ===== -->
+  <div class="marquee" aria-label="Technologies I work with">
+    <div class="track">
+      <ul>
+        <li>React.js</li><li>TypeScript</li><li>SharePoint Framework</li><li>Fluent UI</li><li>Microsoft Graph</li><li>PnP JS</li><li>Redux</li><li>Griffel</li><li>webpack</li><li>Azure DevOps</li><li>Node.js</li>
+      </ul>
+      <ul aria-hidden="true">
+        <li>React.js</li><li>TypeScript</li><li>SharePoint Framework</li><li>Fluent UI</li><li>Microsoft Graph</li><li>PnP JS</li><li>Redux</li><li>Griffel</li><li>webpack</li><li>Azure DevOps</li><li>Node.js</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== About ===== -->
+  <section id="about" aria-labelledby="about-h">
+    <div class="wrap">
+      <h2 class="title" id="about-h"><span>About me</span></h2>
+      <p class="statement" data-fill>I build React and TypeScript interfaces that run inside customers' own Microsoft 365 tenants, and I own each feature from the first commit through testing and release.</p>
+      <div class="about-grid">
+        <div data-reveal>
+          <p>For 4.5+ years I have been a core developer on Ideagen's Policy Management platform, a compliance product used by global enterprises. I deliver features across policy creation, library, certification and administration, and I maintain the shared component library that several projects build on.</p>
+          <p>I also work daily with AI coding agents (Claude Code and Cursor CLI). Project conventions live in Cursor rules files, so generated code follows the same SPFx patterns as the rest of the codebase.</p>
+        </div>
+        <dl class="stats" data-reveal style="--d:1">
+          <div class="stat"><dt><span data-count="4.5" data-dec="1">0</span>+</dt><dd>years in enterprise SPFx</dd></div>
+          <div class="stat"><dt><span data-count="20">0</span>+</dt><dd>reusable components</dd></div>
+          <div class="stat"><dt><span data-count="34">0</span></dt><dd>shared components secured</dd></div>
+          <div class="stat"><dt><span data-count="5">0</span></dt><dd>modules delivered</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Experience ===== -->
+  <section id="experience" class="alt" aria-labelledby="exp-h">
+    <div class="wrap">
+      <h2 class="title" id="exp-h"><span>Experience</span></h2>
+      <div class="role-head" data-reveal>
+        <h3>Software developer, Ideagen</h3>
+        <p>Apr 2022 to present &ndash; formerly ConvergePoint India Pvt. Ltd.</p>
+      </div>
+      <div class="xp" data-reveal>
+        <div class="tabs" role="tablist" aria-label="Areas of work" aria-orientation="vertical" id="tabs">
+          <span class="tab-ind" aria-hidden="true"></span>
+          <button class="tab" role="tab" id="t1" aria-controls="p1" aria-selected="true">Feature delivery</button>
+          <button class="tab" role="tab" id="t2" aria-controls="p2" aria-selected="false" tabindex="-1">Component library</button>
+          <button class="tab" role="tab" id="t3" aria-controls="p3" aria-selected="false" tabindex="-1">Security</button>
+          <button class="tab" role="tab" id="t4" aria-controls="p4" aria-selected="false" tabindex="-1">Identity and access</button>
+          <button class="tab" role="tab" id="t5" aria-controls="p5" aria-selected="false" tabindex="-1">Build and performance</button>
+        </div>
+        <div>
+          <div class="panel" role="tabpanel" id="p1" aria-labelledby="t1" tabindex="0">
+            <h4>Feature delivery and ownership</h4>
+            <ul>
+              <li>Deliver sprint features across the Policy Creation, Library, Certification and Administration modules, taking each from development through end-to-end testing.</li>
+              <li>Built Admin Document Permission Setup, Multiple Policy Configuration Management and Policy Document Settings.</li>
+              <li>Fixed a validation bypass caused by a Fluent UI Switch using uncontrolled <code>defaultChecked</code> instead of controlled <code>checked</code>, which had left ad hoc workflow state inconsistent. You can try that bug in the demo below.</li>
+              <li>Work with QA, Product Owners and stakeholders on blockers, status and release readiness.</li>
+            </ul>
+          </div>
+          <div class="panel" role="tabpanel" id="p2" aria-labelledby="t2" tabindex="0" hidden>
+            <h4>Reusable component library</h4>
+            <ul>
+              <li>Built and maintain 20+ React components, published as shared npm packages and used across multiple projects.</li>
+              <li>They include Admin Layout, Custom Panel, Activity History, Certification, Multi-File Upload, By Topic View, Document View, Library, Global Settings, App Design Settings and Document Status.</li>
+              <li>Keep SPFx conventions consistent with Cursor IDE project rules (<code>.mdc</code> and <code>.cursorrules</code> files).</li>
+            </ul>
+          </div>
+          <div class="panel" role="tabpanel" id="p3" aria-labelledby="t3" tabindex="0" hidden>
+            <h4>Security and dependency management</h4>
+            <ul>
+              <li>Led Veracode remediation across 34 shared components: upgraded axios, jquery, moment and scoped packages, and managed transitive dependencies for jsPDF and DOMPurify.</li>
+              <li>Built a client-side upload check with JSZip that inspects .docx internals for embedded executables and blocks dangerous extensions before anything reaches the server.</li>
+              <li>Protect secrets stored in SharePoint property bags with CryptoJS AES encryption.</li>
+            </ul>
+          </div>
+          <div class="panel" role="tabpanel" id="p4" aria-labelledby="t4" tabindex="0" hidden>
+            <h4>Identity and access</h4>
+            <ul>
+              <li>Implemented People Picker validation for Azure AD groups with Microsoft Graph (GroupMember.Read.All, User.Read.All), covering direct and nested membership and closing a long-standing authorization gap.</li>
+              <li>Manage Entra security groups and SharePoint group provisioning with PnP PowerShell.</li>
+              <li>Investigated group sync delays and resolved the claim format for Object ID based membership.</li>
+            </ul>
+          </div>
+          <div class="panel" role="tabpanel" id="p5" aria-labelledby="t5" tabindex="0" hidden>
+            <h4>Build and performance</h4>
+            <ul>
+              <li>Resolved critical webpack 4 build blockers from ESM-only packages (tabster v5+, jspdf v4.x) with package overrides, Babel loader configuration and dependency pinning.</li>
+              <li>Improved SPFx build performance by disabling source maps, enabling <code>writeToDisk</code> and configuring <code>splitChunks</code>. Recommended splitting oversized components (247 KB+ of TSX).</li>
+              <li>Ship through an Azure DevOps and CDN pipeline into customer-owned SharePoint tenants, within a three-API-layer architecture on Node 18.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Selected work ===== -->
+  <section id="work" aria-labelledby="work-h">
+    <div class="wrap">
+      <h2 class="title" id="work-h"><span>Selected work</span></h2>
+      <div class="work">
+
+        <div class="tilt-wrap" data-reveal>
+          <article class="tilt">
+            <h3>Bulk workflow</h3>
+            <p>Built the frontend for running workflows on many documents at once: a multi-document grid, permission-aware action bar, confirmation modals, progress banner and a per-document status dialog.</p>
+            <p>Designed the pre-execution checks (file conflicts, e-signature, malicious content scan) and decided which run in the backend and which in the frontend. Each document needed about 150 API calls, so 50 documents took 5 to 6 minutes.</p>
+            <div class="viz" aria-hidden="true">
+              <div class="bar"><i id="bulkBar"></i></div>
+              <div class="bulk-count"><span id="bulkNum">0</span> of 50 documents validated</div>
+              <small>Illustration of the 50 document run.</small>
+            </div>
+          </article>
+        </div>
+
+        <div class="tilt-wrap" data-reveal style="--d:1">
+          <article class="tilt lic" id="lic">
+            <h3>License manager <span class="badge">In progress</span></h3>
+            <p>Working on user-based licensing: license logic for AD groups and how it supersedes individual permissions. I am investigating and documenting a defect where AD group licenses double-count members who already hold an individual license.</p>
+            <div class="viz">
+              <div class="people" aria-hidden="true">
+                <span class="p key"><i class="x2">x2</i></span><span class="p"></span><span class="p key"><i class="x2">x2</i></span><span class="p"></span><span class="p"></span><span class="p"></span>
+              </div>
+              <div class="lic-row">
+                <button class="switch" id="licSwitch" role="switch" aria-checked="false"><span class="knob"></span>Show the defect</button>
+                <div class="lic-count" aria-live="polite">Licenses used <b id="licNum">6</b></div>
+              </div>
+              <small>Illustration with sample numbers: 6 group members, 2 of them with individual licenses.</small>
+            </div>
+          </article>
+        </div>
+
+        <div class="tilt-wrap" data-reveal style="--d:2">
+          <article class="tilt">
+            <h3>Frontend logging for SPFx</h3>
+            <p>Evaluated Application Insights against alternatives and wrote the backlog item, implementation guide and comparison document.</p>
+            <p>I recommended a centralized Application Insights setup, because logs that stay inside a customer tenant are out of reach for the team supporting it.</p>
+            <div class="viz flow" aria-hidden="true">
+              <svg viewBox="0 0 300 116">
+                <rect class="node" x="6" y="8" width="74" height="26" rx="8"/><text x="43" y="25" text-anchor="middle">Tenant A</text>
+                <rect class="node" x="6" y="45" width="74" height="26" rx="8"/><text x="43" y="62" text-anchor="middle">Tenant B</text>
+                <rect class="node" x="6" y="82" width="74" height="26" rx="8"/><text x="43" y="99" text-anchor="middle">Tenant C</text>
+                <path d="M80 21 C140 21 150 58 200 58"/>
+                <path d="M80 58 L200 58"/>
+                <path d="M80 95 C140 95 150 58 200 58"/>
+                <rect class="hub" x="200" y="30" width="94" height="56" rx="12"/>
+                <text class="hub-text" x="247" y="55" text-anchor="middle">Application</text>
+                <text class="hub-text" x="247" y="67" text-anchor="middle">Insights</text>
+              </svg>
+              <small>Central logging, instead of logs stranded in each tenant.</small>
+            </div>
+          </article>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Interactive demo ===== -->
+  <section id="lab" class="alt" aria-labelledby="lab-h">
+    <div class="wrap">
+      <h2 class="title" id="lab-h"><span>Try the bug I fixed</span></h2>
+      <p class="lab-intro" data-reveal>A Fluent UI Switch used <code>defaultChecked</code>, so it only read its value once. When the workflow was reset in code, the switch still showed the old value while the workflow state said otherwise. Press <strong>Reset workflow</strong> and watch the two switches.</p>
+      <div class="lab-grid" data-reveal>
+        <div class="lab-card">
+          <h3>Uncontrolled (the bug)</h3>
+          <code class="code">&lt;Switch defaultChecked={value} /&gt;</code>
+          <button class="switch" id="swUnc" role="switch" aria-checked="true" aria-label="Ad hoc workflow, uncontrolled"><span class="knob"></span>Ad hoc workflow</button>
+          <span class="sync ok" id="syncUnc" role="status">In sync</span>
+        </div>
+        <div class="lab-card">
+          <h3>Controlled (the fix)</h3>
+          <code class="code">&lt;Switch checked={value} onChange={set} /&gt;</code>
+          <button class="switch" id="swCon" role="switch" aria-checked="true" aria-label="Ad hoc workflow, controlled"><span class="knob"></span>Ad hoc workflow</button>
+          <span class="sync ok" id="syncCon" role="status">In sync</span>
+        </div>
+      </div>
+      <div class="lab-bar" data-reveal>
+        <button class="btn primary magnetic" id="labReset">Reset workflow</button>
+        <button class="btn magnetic" id="labStart">Start over</button>
+        <span class="state-out">adHocWorkflow = <b id="stateOut">true</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Problems solved ===== -->
+  <section id="problems" aria-labelledby="prob-h">
+    <div class="wrap">
+      <h2 class="title" id="prob-h"><span>Problems solved</span></h2>
+      <p data-reveal style="color:var(--muted);max-width:34em;margin-top:-24px;margin-bottom:36px">Select a card to flip it and see the fix and the result.</p>
+      <div class="cases">
+
+        <div data-reveal>
+          <button class="flip" aria-pressed="false">
+            <span class="flip-in">
+              <span class="face front">
+                <h3>Unblocking webpack 4 builds</h3>
+                <span class="txt"><span class="lbl">Problem</span>ESM-only packages (tabster v5+, jspdf v4.x) could not be built by the project's webpack 4 toolchain.</span>
+                <span class="hint">See the fix <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg></span>
+              </span>
+              <span class="face back" aria-hidden="true">
+                <span class="txt"><span class="lbl">Fix</span>Targeted package overrides, Babel loader configuration and dependency pinning.</span>
+                <span class="txt"><span class="lbl">Result</span>Critical build blockers resolved without migrating the toolchain.</span>
+                <span class="hint">Flip back</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div data-reveal style="--d:1">
+          <button class="flip" aria-pressed="false">
+            <span class="flip-in">
+              <span class="face front">
+                <h3>Veracode remediation</h3>
+                <span class="txt"><span class="lbl">Problem</span>Vulnerable dependencies across the application and its shared component packages.</span>
+                <span class="hint">See the fix <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg></span>
+              </span>
+              <span class="face back" aria-hidden="true">
+                <span class="txt"><span class="lbl">Fix</span>Upgraded axios, jquery, moment and scoped packages, and managed transitive jsPDF and DOMPurify dependencies.</span>
+                <span class="txt"><span class="lbl">Result</span>Remediation delivered across 34 shared components.</span>
+                <span class="hint">Flip back</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div data-reveal>
+          <button class="flip" aria-pressed="false">
+            <span class="flip-in">
+              <span class="face front">
+                <h3>Safer document uploads</h3>
+                <span class="txt"><span class="lbl">Problem</span>Uploaded Word files could carry embedded executables.</span>
+                <span class="hint">See the fix <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg></span>
+              </span>
+              <span class="face back" aria-hidden="true">
+                <span class="txt"><span class="lbl">Fix</span>A JSZip layer that opens the .docx archive and checks its contents for dangerous extensions.</span>
+                <span class="txt"><span class="lbl">Result</span>Dangerous files are blocked in the browser before submission.</span>
+                <span class="hint">Flip back</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <div data-reveal style="--d:1">
+          <button class="flip" aria-pressed="false">
+            <span class="flip-in">
+              <span class="face front">
+                <h3>People Picker group validation</h3>
+                <span class="txt"><span class="lbl">Problem</span>Authorization gaps when validating AD group membership.</span>
+                <span class="hint">See the fix <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg></span>
+              </span>
+              <span class="face back" aria-hidden="true">
+                <span class="txt"><span class="lbl">Fix</span>Direct and nested membership checks with Microsoft Graph (GroupMember.Read.All, User.Read.All).</span>
+                <span class="txt"><span class="lbl">Result</span>The long-standing authorization gaps were closed.</span>
+                <span class="hint">Flip back</span>
+              </span>
+            </span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Skills ===== -->
+  <section id="skills" class="alt" aria-labelledby="skills-h">
+    <div class="wrap">
+      <h2 class="title" id="skills-h"><span>Skills</span></h2>
+      <div class="skills">
+        <div class="group" data-reveal><h3>Frontend</h3><ul class="chips"><li>React.js</li><li>TypeScript</li><li>JavaScript ES6+</li><li>Fluent UI v8/v9</li><li>Griffel.js</li><li>Material UI</li><li>Redux</li><li>HTML5</li><li>CSS3</li><li>Sass</li><li>Bootstrap 4/5</li><li>jQuery</li><li>Responsive design</li></ul></div>
+        <div class="group" data-reveal style="--d:1"><h3>SharePoint and Microsoft 365</h3><ul class="chips"><li>SharePoint Framework</li><li>PnP JS</li><li>PnP PowerShell</li><li>SharePoint REST API</li><li>CAML queries</li><li>Microsoft Graph API</li><li>Azure AD / Entra ID</li></ul></div>
+        <div class="group" data-reveal style="--d:2"><h3>Build and DevOps</h3><ul class="chips"><li>webpack 4</li><li>Babel</li><li>npm</li><li>gulp</li><li>spfx-fast-serve</li><li>Yeoman</li><li>Git</li><li>GitHub</li><li>Azure DevOps</li><li>CDN pipelines</li></ul></div>
+        <div class="group" data-reveal><h3>Security</h3><ul class="chips"><li>Veracode remediation</li><li>JSZip file validation</li><li>CryptoJS AES</li><li>OWASP Top 10</li><li>Dependency auditing</li></ul></div>
+        <div class="group" data-reveal style="--d:1"><h3>AI-assisted development</h3><ul class="chips"><li>Claude Code</li><li>Cursor CLI</li><li>Cursor IDE</li><li>.mdc / .cursorrules</li></ul></div>
+        <div class="group" data-reveal style="--d:2"><h3>Backend and tools</h3><ul class="chips"><li>Node.js</li><li>Express.js</li><li>REST APIs</li><li>MySQL</li><li>VS Code</li><li>Postman</li><li>Graph Explorer</li><li>Azure DevOps Boards</li><li>Figma / PSD-to-HTML</li></ul></div>
+      </div>
+      <p class="edu" data-reveal><strong>Education:</strong> Diploma in Computer Science Engineering, Vellore, Tamil Nadu. <strong>Languages:</strong> English and Tamil.</p>
+    </div>
+  </section>
+
+  <!-- ===== Contact ===== -->
+  <section id="contact" class="contact" aria-labelledby="contact-h">
+    <div class="wrap">
+      <h2 class="title" id="contact-h"><span>Let's talk</span></h2>
+      <p class="lead" data-reveal>I am happy to talk about frontend roles, SPFx and Microsoft 365 development. Email is the quickest way to reach me.</p>
+      <div data-reveal>
+        <a class="mail" href="mailto:Prithivrajgopi@gmail.com" aria-label="Email Prithivrajgopi@gmail.com">
+          <span class="roll" aria-hidden="true"><span>Prithivrajgopi@gmail.com</span><span>Prithivrajgopi@gmail.com</span></span>
+        </a>
+      </div>
+      <div class="actions" data-reveal>
+        <button class="btn primary magnetic" id="copyMail">Copy email</button>
+        <a class="btn magnetic" href="Prithiv_Raj_Resume.pdf" download>Download resume</a>
+        <!-- Add your profile links here when ready, for example:
+        <a class="btn magnetic" href="https://www.linkedin.com/in/your-handle">LinkedIn</a>
+        <a class="btn magnetic" href="https://github.com/your-handle">GitHub</a> -->
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Prithiv Raj G, Tamil Nadu, India</p>
+    <p>Hand-written HTML, CSS and JavaScript. No framework, no build step.</p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };
+  var store = function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} };
+
+  /* ---------- Theme and accent ---------- */
+  var themeBtn = $('#themeBtn');
+  function syncThemeLabel() {
+    themeBtn.setAttribute('aria-label', root.dataset.theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+    var m = $('meta[name="theme-color"]'); if (m) m.content = root.dataset.theme === 'dark' ? '#0A0E1C' : '#F5F6FF';
+  }
+  function themeChanged() { syncThemeLabel(); document.dispatchEvent(new Event('themechange')); }
+  themeBtn.addEventListener('click', function () {
+    document.body.classList.add('theme-anim');
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    store('pr-theme', root.dataset.theme);
+    themeChanged();
+    setTimeout(function () { document.body.classList.remove('theme-anim'); }, 450);
+  });
+  $$('.sw').forEach(function (b) {
+    b.setAttribute('aria-checked', String(b.dataset.accent === root.dataset.accent));
+    b.addEventListener('click', function () {
+      root.dataset.accent = b.dataset.accent; store('pr-accent', b.dataset.accent);
+      $$('.sw').forEach(function (o) { o.setAttribute('aria-checked', String(o === b)); });
+      themeChanged();
+    });
+  });
+  syncThemeLabel();
+
+  /* ---------- Scroll progress ---------- */
+  var prog = $('#progress');
+  function onScrollProgress() {
+    var max = document.documentElement.scrollHeight - innerHeight;
+    prog.style.transform = 'scaleX(' + (max > 0 ? clamp(scrollY / max, 0, 1) : 0) + ')';
+  }
+
+  /* ---------- Nav: sliding indicator and active section ---------- */
+  var nav = $('#nav'), navInd = $('.nav-ind', nav), navLinks = $$('a', nav), activeLink = null;
+  function moveNavInd(link) {
+    if (!link) { navInd.style.setProperty('--o', 0); return; }
+    navInd.style.setProperty('--x', link.offsetLeft + 'px');
+    navInd.style.setProperty('--w', link.offsetWidth + 'px');
+    navInd.style.setProperty('--o', 1);
+  }
+  function setActive(link) {
+    activeLink = link;
+    navLinks.forEach(function (a) { a.removeAttribute('aria-current'); });
+    if (link) { link.setAttribute('aria-current', 'true'); }
+    moveNavInd(link);
+    if (link && nav.scrollWidth > nav.clientWidth) {
+      nav.scrollTo({ left: link.offsetLeft - (nav.clientWidth - link.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' });
+    }
+  }
+  navLinks.forEach(function (a) {
+    a.addEventListener('pointerenter', function () { if (fine) moveNavInd(a); });
+  });
+  nav.addEventListener('pointerleave', function () { moveNavInd(activeLink); });
+  if ('IntersectionObserver' in window) {
+    var secs = navLinks.map(function (a) { return $(a.getAttribute('href')); });
+    var navIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = secs.indexOf(e.target);
+        if (i > -1) setActive(navLinks[i]);
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    secs.forEach(function (s) { if (s) navIO.observe(s); });
+  }
+  setActive(navLinks[0]);
+  addEventListener('resize', function () { moveNavInd(activeLink); });
+
+  /* ---------- Reveal on scroll ---------- */
+  var revealEls = $$('[data-reveal], .title');
+  if ('IntersectionObserver' in window && !reduce) {
+    var rIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); rIO.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    revealEls.forEach(function (el) { rIO.observe(el); });
+  } else { revealEls.forEach(function (el) { el.classList.add('in'); }); }
+
+  /* ---------- Hero: letters (variable font weight) and dot grid ---------- */
+  var hero = $('.hero'), cv = $('#dots'), ctx = cv.getContext('2d');
+  var chars = [], idx = 0;
+  $$('[data-line]').forEach(function (line) {
+    var frag = document.createDocumentFragment();
+    (function walk(node, extraClass) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          n.textContent.split('').forEach(function (c) {
+            if (c === ' ') { var g = document.createElement('span'); g.className = 'gap'; g.setAttribute('aria-hidden', 'true'); frag.appendChild(g); return; }
+            var s = document.createElement('span'); s.className = 'ch' + (extraClass ? ' ' + extraClass : '');
+            s.setAttribute('aria-hidden', 'true'); s.style.setProperty('--i', idx++); s.textContent = c;
+            frag.appendChild(s); chars.push(s);
+          });
+        } else if (n.nodeType === 1) { walk(n, n.className); }
+      });
+    })(line, '');
+    line.textContent = ''; line.appendChild(frag);
+  });
+
+  function fixCharWidths() {
+    // Lock each letter to its near-heaviest width so weight changes never shift the layout.
+    chars.forEach(function (c) { c.style.width = 'auto'; c.style.fontVariationSettings = '"wght" 700'; });
+    var ws = chars.map(function (c) { return c.getBoundingClientRect().width; });
+    chars.forEach(function (c, i) { c.style.width = ws[i] + 'px'; c.style.fontVariationSettings = '"wght" ' + (reduce ? 700 : 300); });
+  }
+
+  var colors = {};
+  function readColors() {
+    var cs = getComputedStyle(root);
+    colors.dot = cs.getPropertyValue('--dot').trim(); colors.acc = cs.getPropertyValue('--accent').trim(); colors.acc2 = cs.getPropertyValue('--accent2').trim();
+  }
+  var W = 0, H = 0, GAP = 30, mouse = { x: 0, y: 0, tx: 0, ty: 0, on: false, init: false };
+  function resizeCanvas() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), r = hero.getBoundingClientRect();
+    W = r.width; H = r.height; GAP = W < 640 ? 24 : 30;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawFrame(performance.now());
+  }
+
+  function drawFrame(t) {
+    var r = hero.getBoundingClientRect();
+    // Pointer target: the real pointer when present, otherwise a slow wandering ghost.
+    if (!mouse.on) {
+      mouse.tx = W * (.5 + .36 * Math.sin(t * .00031)); mouse.ty = H * (.55 + .3 * Math.sin(t * .00047 + 1.2));
+    }
+    if (!mouse.init) { mouse.x = mouse.tx; mouse.y = mouse.ty; mouse.init = true; }
+    mouse.x += (mouse.tx - mouse.x) * .12; mouse.y += (mouse.ty - mouse.y) * .12;
+
+    ctx.clearRect(0, 0, W, H);
+    var cols = Math.ceil(W / GAP) + 1, rows = Math.ceil(H / GAP) + 1, R = 170, i, j;
+    for (j = 0; j < rows; j++) {
+      for (i = 0; i < cols; i++) {
+        var x = i * GAP, y = j * GAP, dx = x - mouse.x, dy = y - mouse.y, d = Math.sqrt(dx * dx + dy * dy);
+        var f = d < R ? Math.pow(1 - d / R, 2) : 0;
+        var amb = reduce ? 0 : .5 + .5 * Math.sin(t * .0011 + (i * .45) + (j * .3));
+        var px = x, py = y;
+        if (f > 0 && d > 0) { px += dx / d * f * 14; py += dy / d * f * 14; }
+        ctx.beginPath(); ctx.arc(px, py, 1.15 + amb * .45 + f * 2.8, 0, 6.2832);
+        if (f > .03) { ctx.fillStyle = (i + j) % 5 === 0 ? colors.acc2 : colors.acc; ctx.globalAlpha = Math.min(1, .25 + f * 1.1); }
+        else { ctx.fillStyle = colors.dot; ctx.globalAlpha = 1; }
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // Letters: weight rises near the pointer, plus a soft travelling wave.
+    if (!reduce) {
+      for (var k = 0; k < chars.length; k++) {
+        var b = chars[k].getBoundingClientRect();
+        var cx = b.left + b.width / 2 - r.left, cy = b.top + b.height / 2 - r.top;
+        var ddx = cx - mouse.x, ddy = cy - mouse.y, g = Math.exp(-(ddx * ddx + ddy * ddy) / (2 * 150 * 150));
+        var wave = .5 + .5 * Math.sin(t * .0018 - k * .55);
+        var wt = clamp(300 + wave * 110 + g * 520, 300, 800);
+        chars[k].style.fontVariationSettings = '"wght" ' + wt.toFixed(0);
+      }
+    }
+  }
+
+  var heroVisible = true;
+  function loop(t) { if (heroVisible && !document.hidden) drawFrame(t); requestAnimationFrame(loop); }
+  hero.addEventListener('pointermove', function (e) {
+    var r = hero.getBoundingClientRect(); mouse.tx = e.clientX - r.left; mouse.ty = e.clientY - r.top; mouse.on = true;
+  });
+  hero.addEventListener('pointerleave', function () { mouse.on = false; });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { heroVisible = es[0].isIntersecting; }, { threshold: 0 }).observe(hero);
+  }
+  readColors(); resizeCanvas();
+  document.addEventListener('themechange', function () { readColors(); if (reduce) drawFrame(0); });
+  var rsT; addEventListener('resize', function () { clearTimeout(rsT); rsT = setTimeout(function () { fixCharWidths(); resizeCanvas(); }, 120); });
+  if (!reduce) requestAnimationFrame(loop);
+
+  // Intro: wait for the font so the letters are measured with the real glyphs.
+  var introDone = false;
+  function intro() { if (introDone) return; introDone = true; fixCharWidths(); resizeCanvas(); root.classList.add('ready'); }
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(intro); setTimeout(intro, 1800); } else { intro(); }
+
+  /* ---------- Role rotator ---------- */
+  var rot = $$('#rotator > span');
+  if (!reduce && rot.length > 1) {
+    var cur = 0;
+    setInterval(function () {
+      var prev = rot[cur]; prev.className = 'off';
+      cur = (cur + 1) % rot.length;
+      var next = rot[cur]; next.className = '';
+      void next.offsetWidth; next.className = 'on';
+      setTimeout(function () { if (prev !== rot[cur]) prev.className = ''; }, 650);
+    }, 2600);
+  } else { rot.forEach(function (s, i) { s.style.display = i ? 'none' : ''; s.className = 'on'; }); }
+
+  /* ---------- Magnetic buttons ---------- */
+  if (fine && !reduce) {
+    $$('.magnetic').forEach(function (b) {
+      b.addEventListener('pointermove', function (e) {
+        var r = b.getBoundingClientRect();
+        b.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * .22) + 'px,' + ((e.clientY - r.top - r.height / 2) * .32) + 'px)';
+      });
+      b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+    });
+  }
+
+  /* ---------- About: words light up as you scroll ---------- */
+  var fillEl = $('[data-fill]'), words = [];
+  if (fillEl) {
+    var parts = fillEl.textContent.trim().split(/\s+/);
+    fillEl.innerHTML = '';
+    parts.forEach(function (w, i) {
+      var s = document.createElement('span'); s.className = 'w'; s.textContent = w; fillEl.appendChild(s); words.push(s);
+      if (i < parts.length - 1) fillEl.appendChild(document.createTextNode(' '));
+    });
+    if (reduce) words.forEach(function (w) { w.classList.add('lit'); });
+  }
+  function updateFill() {
+    if (!fillEl || reduce) return;
+    var r = fillEl.getBoundingClientRect();
+    var p = clamp((innerHeight * .88 - r.top) / (r.height + innerHeight * .3), 0, 1);
+    var n = Math.round(p * words.length);
+    for (var i = 0; i < words.length; i++) words[i].classList.toggle('lit', i < n);
+  }
+
+  /* ---------- Counters ---------- */
+  var counters = $$('[data-count]');
+  function runCounter(el) {
+    var to = parseFloat(el.dataset.count), dec = parseInt(el.dataset.dec || '0', 10);
+    if (reduce) { el.textContent = to.toFixed(dec); return; }
+    var t0 = performance.now(), dur = 1500;
+    (function tick(t) {
+      var p = clamp((t - t0) / dur, 0, 1), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = (to * e).toFixed(dec);
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  if ('IntersectionObserver' in window) {
+    var cIO = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { runCounter(e.target); cIO.unobserve(e.target); } }); }, { threshold: .6 });
+    counters.forEach(function (c) { cIO.observe(c); });
+  } else { counters.forEach(runCounter); }
+
+  /* ---------- Experience tabs ---------- */
+  var tabsEl = $('#tabs'), tabInd = $('.tab-ind', tabsEl), tabs = $$('.tab', tabsEl), panels = tabs.map(function (t) { return $('#' + t.getAttribute('aria-controls')); });
+  var curTab = 0;
+  function placeTabInd(tab) {
+    tabInd.style.setProperty('--x', tab.offsetLeft + 'px'); tabInd.style.setProperty('--y', tab.offsetTop + 'px');
+    tabInd.style.setProperty('--w', tab.offsetWidth + 'px'); tabInd.style.setProperty('--h', tab.offsetHeight + 'px');
+  }
+  function selectTab(i, focus) {
+    curTab = i;
+    tabs.forEach(function (t, k) {
+      var on = k === i; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+      panels[k].hidden = !on; panels[k].classList.remove('show');
+    });
+    void panels[i].offsetWidth; panels[i].classList.add('show');
+    placeTabInd(tabs[i]);
+    if (tabsEl.scrollWidth > tabsEl.clientWidth) tabsEl.scrollTo({ left: tabs[i].offsetLeft - (tabsEl.clientWidth - tabs[i].offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' });
+    if (focus) tabs[i].focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { selectTab(i); });
+    t.addEventListener('keydown', function (e) {
+      var n = tabs.length, k = -1;
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') k = (i + 1) % n;
+      else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') k = (i - 1 + n) % n;
+      else if (e.key === 'Home') k = 0; else if (e.key === 'End') k = n - 1;
+      if (k > -1) { e.preventDefault(); selectTab(k, true); }
+    });
+  });
+  placeTabInd(tabs[0]);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { placeTabInd(tabs[curTab]); });
+  addEventListener('resize', function () { placeTabInd(tabs[curTab]); });
+
+  /* ---------- Tilt and spotlight on cards ---------- */
+  if (fine && !reduce) {
+    $$('.tilt').forEach(function (c) {
+      c.addEventListener('pointermove', function (e) {
+        var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        c.style.setProperty('--mx', (x * 100) + '%'); c.style.setProperty('--my', (y * 100) + '%');
+        c.style.setProperty('--rx', ((.5 - y) * 5).toFixed(2) + 'deg'); c.style.setProperty('--ry', ((x - .5) * 7).toFixed(2) + 'deg');
+      });
+      c.addEventListener('pointerleave', function () { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); });
+    });
+  }
+
+  /* ---------- Work card: bulk progress illustration ---------- */
+  var bulkBar = $('#bulkBar'), bulkNum = $('#bulkNum');
+  function setBulk(n) { bulkBar.style.width = (n / 50 * 100) + '%'; bulkNum.textContent = Math.round(n); }
+  if (reduce) { setBulk(50); }
+  else if ('IntersectionObserver' in window) {
+    var bulkOn = false, bStart = 0;
+    new IntersectionObserver(function (es) { bulkOn = es[0].isIntersecting; if (bulkOn) bStart = performance.now(); }, { threshold: .4 }).observe(bulkBar.closest('.viz'));
+    (function bulkLoop(t) {
+      if (bulkOn) { var e = (t - bStart) % 7600; setBulk(e < 5600 ? e / 5600 * 50 : 50); }
+      requestAnimationFrame(bulkLoop);
+    })(performance.now());
+  } else { setBulk(50); }
+
+  /* ---------- Work card: license count illustration ---------- */
+  var licSw = $('#licSwitch'), licEl = $('#lic'), licNum = $('#licNum'), licVal = 6;
+  licSw.addEventListener('click', function () {
+    var on = licSw.getAttribute('aria-checked') !== 'true';
+    licSw.setAttribute('aria-checked', String(on)); licEl.classList.toggle('defect', on);
+    var from = licVal, to = on ? 8 : 6, t0 = performance.now();
+    if (reduce) { licVal = to; licNum.textContent = to; return; }
+    (function tick(t) {
+      var p = clamp((t - t0) / 500, 0, 1); licVal = from + (to - from) * p; licNum.textContent = Math.round(licVal);
+      if (p < 1) requestAnimationFrame(tick);
+    })(t0);
+  });
+
+  /* ---------- Demo: controlled vs uncontrolled switch ---------- */
+  var swUnc = $('#swUnc'), swCon = $('#swCon'), sUnc = $('#syncUnc'), sCon = $('#syncCon'), out = $('#stateOut');
+  var state = true, uncShown = true;
+  function setSync(el, ok) {
+    var was = el.classList.contains('bad');
+    el.className = 'sync ' + (ok ? 'ok' : 'bad');
+    el.textContent = ok ? 'In sync' : 'Out of sync with the state';
+    if (!ok && was) { el.classList.remove('bad'); void el.offsetWidth; el.classList.add('bad'); }
+  }
+  function renderLab() {
+    swUnc.setAttribute('aria-checked', String(uncShown));
+    swCon.setAttribute('aria-checked', String(state));
+    out.textContent = String(state);
+    setSync(sUnc, uncShown === state); setSync(sCon, true);
+  }
+  swUnc.addEventListener('click', function () { uncShown = !uncShown; state = uncShown; renderLab(); });
+  swCon.addEventListener('click', function () { state = !state; renderLab(); });
+  $('#labReset').addEventListener('click', function () { state = false; renderLab(); });   // the uncontrolled switch ignores this
+  $('#labStart').addEventListener('click', function () { state = true; uncShown = true; renderLab(); });
+  renderLab();
+
+  /* ---------- Flip cards ---------- */
+  $$('.flip').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', String(on));
+      $('.front', b).setAttribute('aria-hidden', String(on));
+      $('.back', b).setAttribute('aria-hidden', String(!on));
+    });
+  });
+
+  /* ---------- Copy email ---------- */
+  var toast = $('#toast'), toastT;
+  function showToast(msg) { toast.textContent = msg; toast.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function () { toast.classList.remove('show'); }, 2200); }
+  $('#copyMail').addEventListener('click', function () {
+    var mail = 'Prithivrajgopi@gmail.com';
+    function fallback() {
+      var ta = document.createElement('textarea'); ta.value = mail; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); showToast('Email copied'); } catch (e) { showToast('Copy failed. Select the address above.'); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(mail).then(function () { showToast('Email copied'); }, fallback); } else { fallback(); }
+  });
+
+  /* ---------- Scroll handler (one rAF-throttled listener) ---------- */
+  var ticking = false;
+  function onScroll() { if (ticking) return; ticking = true; requestAnimationFrame(function () { onScrollProgress(); updateFill(); ticking = false; }); }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>
